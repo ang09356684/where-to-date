@@ -5,7 +5,8 @@ import Link from "next/link";
 
 const BROWSE_LINKS = [
   { href: "/exhibitions", label: "展覽", icon: "🎨" },
-  { href: "/concerts", label: "音樂/演唱會", icon: "🎵" },
+  { href: "/concerts", label: "演唱會", icon: "🎤" },
+  { href: "/music", label: "音樂會", icon: "🎼" },
   { href: "/theater", label: "戲劇", icon: "🎭" },
   { href: "/movies", label: "電影", icon: "🎬" },
 ];

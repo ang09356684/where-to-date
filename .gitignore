@@ -43,7 +43,6 @@ test-*.mjs
 # spectra
 .spectra/
 .spectra.yaml
-openspec/
 
 # claude internal
 .claude/

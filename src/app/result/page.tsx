@@ -77,7 +77,7 @@ function ResultContent() {
                   : district}
           </span>
           <span className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">
-            {{ all: "不限", exhibition: "展覽", concert: "音樂/演唱會", theater: "戲劇", movie: "電影", attraction: "景點", food: "餐廳/咖啡" }[type] ?? type}
+            {{ all: "不限", exhibition: "展覽", concert: "演唱會", music: "音樂會", theater: "戲劇", movie: "電影", attraction: "景點", food: "餐廳/咖啡" }[type] ?? type}
           </span>
           <span className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">
             {setting === "indoor"

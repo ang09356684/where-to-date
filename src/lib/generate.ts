@@ -12,7 +12,7 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function isActivity(p: Place): boolean {
-  return ["exhibition", "concert", "theater", "movie", "attraction"].includes(p.type);
+  return ["exhibition", "concert", "music", "theater", "movie", "attraction"].includes(p.type);
 }
 
 function isFood(p: Place): boolean {
@@ -25,6 +25,7 @@ function matchesType(place: Place, typeFilter: string): boolean {
   if (typeFilter === "movie") return place.type === "movie";
   if (typeFilter === "attraction") return place.type === "attraction";
   if (typeFilter === "concert") return place.type === "concert";
+  if (typeFilter === "music") return place.type === "music";
   if (typeFilter === "theater") return place.type === "theater";
   if (typeFilter === "food") return isFood(place);
   return true;
@@ -70,7 +71,7 @@ function pickPlaces(
       const f = pickFrom(foods, usedIds);
       if (f) places.push(f);
     }
-  } else if (["exhibition", "concert", "theater", "movie", "attraction"].includes(typeFilter)) {
+  } else if (["exhibition", "concert", "music", "theater", "movie", "attraction"].includes(typeFilter)) {
     // Only activities requested: activity → activity → activity
     // But mix in food if available for variety
     const a1 = pickFrom(activities, usedIds);

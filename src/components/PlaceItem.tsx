@@ -2,7 +2,8 @@ import type { Place } from "@/types";
 
 const TYPE_LABELS: Record<string, string> = {
   exhibition: "展覽",
-  concert: "音樂/演唱會",
+  concert: "演唱會",
+  music: "音樂會",
   theater: "戲劇",
   movie: "電影",
   restaurant: "餐廳",
@@ -14,6 +15,7 @@ const TYPE_LABELS: Record<string, string> = {
 const TYPE_COLORS: Record<string, string> = {
   exhibition: "bg-purple-100 text-purple-700",
   concert: "bg-rose-100 text-rose-700",
+  music: "bg-indigo-100 text-indigo-700",
   theater: "bg-fuchsia-100 text-fuchsia-700",
   movie: "bg-blue-100 text-blue-700",
   restaurant: "bg-orange-100 text-orange-700",

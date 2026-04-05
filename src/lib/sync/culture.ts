@@ -85,9 +85,21 @@ export function culturePlaces(): Place[] {
   return raw.map((item) => toPlace(item, "exhibition", "culture"));
 }
 
+const CONCERT_KEYWORDS = /演唱會|巡迴|Live|Tour|LIVE|音樂節|Festival/i;
+
+function isConcert(title: string): boolean {
+  return CONCERT_KEYWORDS.test(title);
+}
+
 export function cultureMusicPlaces(): Place[] {
   const raw: CultureRawItem[] = readRawJson("performances-music.json");
-  return raw.map((item) => toPlace(item, "concert", "culture-music"));
+  return raw.map((item) =>
+    toPlace(
+      item,
+      isConcert(item.title) ? "concert" : "music",
+      "culture-music"
+    )
+  );
 }
 
 export function cultureTheaterPlaces(): Place[] {

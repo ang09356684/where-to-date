@@ -9,6 +9,9 @@ import { syncTaipeiAttractions } from "@/lib/sync/taipei-attractions";
 import { syncTaoyuan } from "@/lib/sync/taoyuan";
 import { syncTixcraft } from "@/lib/sync/tixcraft";
 import { syncEraTicket } from "@/lib/sync/era-ticket";
+import { syncKham } from "@/lib/sync/kham";
+import { syncOpentix } from "@/lib/sync/opentix";
+import { syncKktix } from "@/lib/sync/kktix";
 import { combineAllPlaces } from "@/lib/combine";
 import type { SyncResult } from "@/types";
 
@@ -26,6 +29,9 @@ export async function POST() {
     syncTaoyuan(),
     syncTixcraft(),
     syncEraTicket(),
+    syncKham(),
+    syncOpentix(),
+    syncKktix(),
   ]);
 
   const allPlaces = combineAllPlaces();

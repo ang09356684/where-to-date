@@ -38,7 +38,8 @@ const SUB_DISTRICTS: Record<string, { value: string; label: string }[]> = {
 const TYPES = [
   { value: "all", label: "不限" },
   { value: "exhibition", label: "展覽" },
-  { value: "concert", label: "音樂/演唱會" },
+  { value: "concert", label: "演唱會" },
+  { value: "music", label: "音樂會" },
   { value: "theater", label: "戲劇" },
   { value: "movie", label: "電影" },
   { value: "attraction", label: "景點" },

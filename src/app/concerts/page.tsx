@@ -3,9 +3,9 @@ import BrowseList from "@/components/BrowseList";
 export default function ConcertsPage() {
   return (
     <BrowseList
-      title="音樂 / 演唱會"
+      title="演唱會"
       apiType="concert"
-      icon="🎵"
+      icon="🎤"
       iconBg="bg-rose-100"
       badgeBg="bg-rose-50"
       badgeText="text-rose-600"
@@ -13,6 +13,9 @@ export default function ConcertsPage() {
         "culture-music": "文化部",
         tixcraft: "拓元售票",
         "era-ticket": "年代售票",
+        kham: "寬宏售票",
+        opentix: "兩廳院",
+        kktix: "KKTIX",
       }}
       countLabel="場"
     />

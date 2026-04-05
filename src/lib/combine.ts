@@ -9,6 +9,9 @@ import { taipeiAttractionPlaces } from "@/lib/sync/taipei-attractions";
 import { taoyuanPlaces } from "@/lib/sync/taoyuan";
 import { tixcraftPlaces } from "@/lib/sync/tixcraft";
 import { eraTicketPlaces } from "@/lib/sync/era-ticket";
+import { khamPlaces } from "@/lib/sync/kham";
+import { opentixPlaces } from "@/lib/sync/opentix";
+import { kktixPlaces } from "@/lib/sync/kktix";
 import { readRawJson } from "@/lib/data";
 import type { Place } from "@/types";
 
@@ -41,6 +44,9 @@ export function combineAllPlaces(): Place[] {
     ...cultureTheaterPlaces(),
     ...tixcraftPlaces(),
     ...eraTicketPlaces(),
+    ...khamPlaces(),
+    ...opentixPlaces(),
+    ...kktixPlaces(),
   ];
 
   const movies = atmoviesPlaces();
@@ -74,6 +80,10 @@ export function combineAllPlaces(): Place[] {
   writeCombinedJson(
     "concerts.json",
     deduped.filter((p) => p.type === "concert")
+  );
+  writeCombinedJson(
+    "music.json",
+    deduped.filter((p) => p.type === "music")
   );
   writeCombinedJson(
     "theater.json",

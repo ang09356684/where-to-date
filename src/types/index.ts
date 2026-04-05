@@ -19,6 +19,7 @@ export interface Place {
 export type PlaceType =
   | "exhibition"
   | "concert"
+  | "music"
   | "theater"
   | "movie"
   | "restaurant"
@@ -33,7 +34,7 @@ export interface Itinerary {
 
 export interface GenerateRequest {
   district?: string;
-  type: "all" | "exhibition" | "concert" | "theater" | "movie" | "attraction" | "food";
+  type: "all" | "exhibition" | "concert" | "music" | "theater" | "movie" | "attraction" | "food";
   setting: "indoor" | "outdoor" | "both";
   exclude?: string[];
 }
