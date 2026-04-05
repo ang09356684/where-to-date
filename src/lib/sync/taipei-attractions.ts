@@ -1,0 +1,50 @@
+import { writeRawJson, readRawJson } from "@/lib/data";
+import type { Place, SyncResult } from "@/types";
+
+// Use culture.tw for Taipei outdoor activities/attractions (category=15 = 其他)
+// and filter for outdoor-related keywords
+const CULTURE_URL =
+  "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=15";
+
+// Curated list of popular Taipei outdoor attractions
+const CURATED_ATTRACTIONS: Place[] = [
+  { id: "tpa-001", name: "象山步道", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市信義區信義路五段150巷", district: "信義區", goodFor: "both" },
+  { id: "tpa-002", name: "陽明山國家公園", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市北投區竹子湖路1-20號", district: "北投區", goodFor: "both" },
+  { id: "tpa-003", name: "北投溫泉博物館", type: "attraction", source: "taipei-attraction", category: "indoor", address: "臺北市北投區中山路2號", district: "北投區", goodFor: "both" },
+  { id: "tpa-004", name: "北投地熱谷", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市北投區溫泉路", district: "北投區", goodFor: "both" },
+  { id: "tpa-005", name: "大稻埕碼頭", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市大同區民生西路底", district: "大同區", goodFor: "date" },
+  { id: "tpa-006", name: "貓空纜車", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市文山區萬興里新光路二段8號", district: "文山區", goodFor: "both" },
+  { id: "tpa-007", name: "台北101觀景台", type: "attraction", source: "taipei-attraction", category: "indoor", address: "臺北市信義區信義路五段7號89樓", district: "信義區", goodFor: "both", price: "全票600元" },
+  { id: "tpa-008", name: "龍山寺", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市萬華區廣州街211號", district: "萬華區", goodFor: "both" },
+  { id: "tpa-009", name: "中正紀念堂", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市中正區中山南路21號", district: "中正區", goodFor: "both" },
+  { id: "tpa-010", name: "大安森林公園", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市大安區新生南路二段1號", district: "大安區", goodFor: "both" },
+  { id: "tpa-011", name: "華山大草原", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市中正區八德路一段1號", district: "中正區", goodFor: "both" },
+  { id: "tpa-012", name: "松山文創園區生態池", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市信義區光復南路133號", district: "信義區", goodFor: "both" },
+  { id: "tpa-013", name: "士林官邸", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市士林區福林路60號", district: "士林區", goodFor: "both" },
+  { id: "tpa-014", name: "國立故宮博物院", type: "attraction", source: "taipei-attraction", category: "indoor", address: "臺北市士林區至善路二段221號", district: "士林區", goodFor: "both", price: "全票350元" },
+  { id: "tpa-015", name: "台北市立美術館", type: "attraction", source: "taipei-attraction", category: "indoor", address: "臺北市中山區中山北路三段181號", district: "中山區", goodFor: "both", price: "全票30元" },
+  { id: "tpa-016", name: "松山慈祐宮", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市松山區八德路四段761號", district: "松山區", goodFor: "both" },
+  { id: "tpa-017", name: "碧湖公園", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市內湖區內湖路二段175號", district: "內湖區", goodFor: "both" },
+  { id: "tpa-018", name: "劍潭山親山步道", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市中山區北安路", district: "中山區", goodFor: "both" },
+  { id: "tpa-019", name: "虎山步道", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市信義區福德街251巷", district: "信義區", goodFor: "both" },
+  { id: "tpa-020", name: "軍艦岩步道", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市北投區榮總後方", district: "北投區", goodFor: "both" },
+  { id: "tpa-021", name: "金面山步道", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市內湖區環山路一段136巷", district: "內湖區", goodFor: "both" },
+  { id: "tpa-022", name: "河濱公園自行車道", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市大同區環河北路", district: "大同區", goodFor: "both" },
+  { id: "tpa-023", name: "台北植物園", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市中正區南海路53號", district: "中正區", goodFor: "both" },
+  { id: "tpa-024", name: "西門町", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市萬華區峨眉街", district: "萬華區", goodFor: "both" },
+  { id: "tpa-025", name: "永康街商圈", type: "attraction", source: "taipei-attraction", category: "outdoor", address: "臺北市大安區永康街", district: "大安區", goodFor: "both" },
+];
+
+export async function syncTaipeiAttractions(): Promise<SyncResult> {
+  // Curated list — no API call needed, just write to raw
+  writeRawJson("attractions-taipei.json", CURATED_ATTRACTIONS);
+  return {
+    source: "taipei-attraction",
+    status: "success",
+    count: CURATED_ATTRACTIONS.length,
+  };
+}
+
+export function taipeiAttractionPlaces(): Place[] {
+  return readRawJson<Place[]>("attractions-taipei.json");
+}

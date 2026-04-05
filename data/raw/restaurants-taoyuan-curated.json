@@ -1,0 +1,17 @@
+[
+  {"id":"ty-rest-001","name":"大溪老街豆干","type":"restaurant","source":"taoyuan-curated","category":"outdoor","address":"桃園市大溪區和平路","district":"大溪區","goodFor":"both"},
+  {"id":"ty-rest-002","name":"大溪賴媽媽豆花","type":"cafe","source":"taoyuan-curated","category":"indoor","address":"桃園市大溪區和平路54號","district":"大溪區","goodFor":"both"},
+  {"id":"ty-rest-003","name":"草店尾事務所","type":"cafe","source":"taoyuan-curated","category":"indoor","address":"桃園市大溪區草店尾8號","district":"大溪區","goodFor":"date"},
+  {"id":"ty-rest-004","name":"丑咖啡","type":"cafe","source":"taoyuan-curated","category":"indoor","address":"桃園市大溪區和平路39號","district":"大溪區","goodFor":"date"},
+  {"id":"ty-rest-005","name":"中壢夜市","type":"restaurant","source":"taoyuan-curated","category":"outdoor","address":"桃園市中壢區新明路","district":"中壢區","goodFor":"both"},
+  {"id":"ty-rest-006","name":"龍潭大池旁小吃","type":"restaurant","source":"taoyuan-curated","category":"outdoor","address":"桃園市龍潭區中豐路上林段","district":"龍潭區","goodFor":"both"},
+  {"id":"ty-rest-007","name":"日和三味","type":"restaurant","source":"taoyuan-curated","category":"indoor","address":"桃園市中壢區中山路141號","district":"中壢區","goodFor":"date"},
+  {"id":"ty-rest-008","name":"有食候。紅豆 中壢店","type":"cafe","source":"taoyuan-curated","category":"indoor","address":"桃園市中壢區中央東路82號","district":"中壢區","goodFor":"both"},
+  {"id":"ty-rest-009","name":"桃園觀光夜市","type":"restaurant","source":"taoyuan-curated","category":"outdoor","address":"桃園市桃園區中正路","district":"桃園區","goodFor":"both"},
+  {"id":"ty-rest-010","name":"鬍子叔叔義大利餐廳","type":"restaurant","source":"taoyuan-curated","category":"indoor","address":"桃園市桃園區中山路38號","district":"桃園區","goodFor":"date"},
+  {"id":"ty-rest-011","name":"風雨珈琲","type":"cafe","source":"taoyuan-curated","category":"indoor","address":"桃園市桃園區民安路30號","district":"桃園區","goodFor":"date"},
+  {"id":"ty-rest-012","name":"春天農場","type":"restaurant","source":"taoyuan-curated","category":"outdoor","address":"桃園市龜山區長壽路272號","district":"龜山區","goodFor":"both"},
+  {"id":"ty-rest-013","name":"角板山行館咖啡","type":"cafe","source":"taoyuan-curated","category":"outdoor","address":"桃園市復興區澤仁里中山路133-1號","district":"復興區","goodFor":"date"},
+  {"id":"ty-rest-014","name":"拉拉山水蜜桃冰沙","type":"cafe","source":"taoyuan-curated","category":"outdoor","address":"桃園市復興區華陵里","district":"復興區","goodFor":"both"},
+  {"id":"ty-rest-015","name":"三坑老街客家菜","type":"restaurant","source":"taoyuan-curated","category":"indoor","address":"桃園市龍潭區三坑子5鄰69號","district":"龍潭區","goodFor":"both"}
+]
