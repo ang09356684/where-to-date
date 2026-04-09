@@ -23,12 +23,23 @@
 **快速（fetch，並行執行）：**
 culture, culture-music, culture-theater, huashan, songshan, twtc, ntsec, atmovies, taipei-attraction, taoyuan, tixcraft, era-ticket, kham
 
-**慢速（Playwright，依序執行）：**
+**慢速（依序執行）：**
 opentix, kktix
 
+> opentix 已從 Playwright 改為 fetch-based（批次並行抓取 sitemap 內的活動頁面），耗時從 5~10 分鐘降至 ~15 秒。
+> kktix 仍使用 Playwright（頁面為 JS render，fetch 無法取得內容）。
+
+### Server Log
+API route 每個來源開始/完成時輸出 log，包含狀態與耗時：
+```
+[sync] ▶ huashan started
+[sync] ✔ huashan success (18 items, 3199ms)
+```
+
 ## 修改檔案
-- `src/app/api/sync/route.ts` — SSE 串流回應
+- `src/app/api/sync/route.ts` — SSE 串流回應 + server log
 - `src/components/SyncButton.tsx` — 進度條 UI
+- `src/lib/sync/opentix.ts` — 從 Playwright 改為 fetch-based
 
 ## 驗證
 1. 點同步按鈕 → 看到進度條逐步填滿
@@ -36,3 +47,4 @@ opentix, kktix
 3. 進度顯示「X/15」
 4. 完成後顯示總筆數
 5. 錯誤的來源不影響進度流程
+6. server terminal 可看到每個來源的 log 與耗時

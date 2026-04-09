@@ -3,6 +3,7 @@ import type { Place, SyncResult } from "@/types";
 
 const SITEMAP_URL = "https://www.opentix.life/otWebSitemap.xml";
 const MAX_EVENTS = 50;
+const BATCH_SIZE = 10;
 const CONCERT_KEYWORDS = /演唱會|巡迴|Live|Tour|LIVE|音樂節|Festival/i;
 
 interface OpentixRaw {
@@ -12,10 +13,15 @@ interface OpentixRaw {
   link: string;
 }
 
+function cleanTitle(raw: string): string {
+  return raw
+    .replace(/\s*[—\-|｜]\s*OPENTIX.*$/i, "")
+    .trim();
+}
+
 export async function syncOpentix(): Promise<SyncResult> {
   try {
-    // Fetch sitemap and extract event URLs
-    const sitemapRes = await fetch(SITEMAP_URL);
+    const sitemapRes = await fetch(SITEMAP_URL, { signal: AbortSignal.timeout(10000) });
     const xml = await sitemapRes.text();
 
     const urlRegex = /https:\/\/www\.opentix\.life\/event\/\d+/g;
@@ -27,39 +33,28 @@ export async function syncOpentix(): Promise<SyncResult> {
       return { source: "opentix", status: "success", count: 0 };
     }
 
-    // Use Playwright to visit each event page
-    const { chromium } = await import("playwright");
-    const browser = await chromium.launch({ headless: true });
     const items: OpentixRaw[] = [];
 
-    try {
-      const context = await browser.newContext();
-      const page = await context.newPage();
+    // Fetch pages in parallel batches
+    for (let i = 0; i < eventUrls.length; i += BATCH_SIZE) {
+      const batch = eventUrls.slice(i, i + BATCH_SIZE);
+      const results = await Promise.allSettled(
+        batch.map(async (url) => {
+          const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+          const html = await res.text();
 
-      for (const url of eventUrls) {
-        try {
-          await page.goto(url, { timeout: 10000, waitUntil: "domcontentloaded" });
-          await page.waitForTimeout(2000);
+          const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+          const title = cleanTitle(titleMatch?.[1] ?? "");
 
-          const title = await page.title().catch(() => "");
-          // Clean up title — OPENTIX titles often end with " | OPENTIX"
-          const cleanTitle = title
-            .replace(/\s*[|｜]\s*OPENTIX.*$/i, "")
-            .replace(/\s*-\s*OPENTIX.*$/i, "")
-            .trim();
+          return { title, link: url };
+        })
+      );
 
-          if (cleanTitle && cleanTitle.length > 2) {
-            items.push({
-              title: cleanTitle,
-              link: url,
-            });
-          }
-        } catch {
-          // Skip failed pages silently
+      for (const r of results) {
+        if (r.status === "fulfilled" && r.value.title.length > 2) {
+          items.push(r.value);
         }
       }
-    } finally {
-      await browser.close();
     }
 
     writeRawJson("performances-opentix.json", items);

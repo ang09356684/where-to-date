@@ -69,7 +69,10 @@ export async function POST() {
 
       // Run fast sources in parallel, emit progress as each completes
       const fastPromises = FAST_SOURCES.map(async ({ name, fn }) => {
+        const t0 = Date.now();
+        console.log(`[sync] ▶ ${name} started`);
         const result = await fn();
+        console.log(`[sync] ✔ ${name} ${result.status} (${result.count} items, ${Date.now() - t0}ms)`);
         progress++;
         send({
           source: name,
@@ -86,6 +89,8 @@ export async function POST() {
 
       // Run slow sources sequentially
       for (const { name, fn } of SLOW_SOURCES) {
+        const t0 = Date.now();
+        console.log(`[sync] ▶ ${name} started`);
         send({
           source: name,
           label: SOURCE_LABELS[name] ?? name,
@@ -94,6 +99,7 @@ export async function POST() {
           total: TOTAL,
         });
         const result = await fn();
+        console.log(`[sync] ✔ ${name} ${result.status} (${result.count} items, ${Date.now() - t0}ms)`);
         progress++;
         send({
           source: name,
