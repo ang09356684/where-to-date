@@ -71,7 +71,7 @@ function parseXmlAttractions(xml: string): TaoyuanRawAttraction[] {
 
 export async function syncTaoyuan(): Promise<SyncResult> {
   try {
-    const res = await fetch(URL);
+    const res = await fetch(URL, { signal: AbortSignal.timeout(10000) });
     const xml = await res.text();
     const attractions = parseXmlAttractions(xml);
 

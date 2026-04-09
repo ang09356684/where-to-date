@@ -40,10 +40,6 @@ yarn-error.log*
 /screenshots
 test-*.mjs
 
-# spectra
-.spectra/
-.spectra.yaml
-
 # claude internal
 .claude/
 
@@ -58,5 +54,3 @@ data/combined/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.spectra/
-openspec/.vector-search.db*

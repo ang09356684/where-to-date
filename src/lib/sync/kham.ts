@@ -11,7 +11,7 @@ interface KhamRaw {
 // Fetch Kham ticketing page, parse event names and PRODUCT_ID links
 export async function syncKham(): Promise<SyncResult> {
   try {
-    const res = await fetch(URL);
+    const res = await fetch(URL, { signal: AbortSignal.timeout(10000) });
     const html = await res.text();
 
     const items: KhamRaw[] = [];

@@ -48,7 +48,7 @@ async function syncCategory(
   sourceName: string
 ): Promise<SyncResult> {
   try {
-    const res = await fetch(`${BASE_URL}${category}`);
+    const res = await fetch(`${BASE_URL}${category}`, { signal: AbortSignal.timeout(10000) });
     const all: CultureRawItem[] = await res.json();
     const taipei = all.filter(isTaipei);
 

@@ -13,7 +13,7 @@ interface NtsecRaw {
 
 export async function syncNtsec(): Promise<SyncResult> {
   try {
-    const res = await fetch(URL);
+    const res = await fetch(URL, { signal: AbortSignal.timeout(10000) });
     const html = await res.text();
 
     const items: NtsecRaw[] = [];
