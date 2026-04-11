@@ -43,13 +43,12 @@ test-*.mjs
 # claude internal
 .claude/
 
-# synced data (auto-generated, not committed)
-data/raw/exhibitions-*.json
-data/raw/movies-*.json
-data/raw/performances-*.json
-data/raw/attractions-*.json
-data/raw/restaurants-taoyuan.json
-data/combined/
+# data files (keep directories only)
+data/**
+!data/
+!data/raw/
+!data/combined/
+!data/**/.gitkeep
 
 # typescript
 *.tsbuildinfo
