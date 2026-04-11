@@ -24,6 +24,13 @@ export default function Home() {
         ❤️ 我的最愛
       </Link>
 
+      <Link
+        href="/custom-places"
+        className="mt-3 flex w-full max-w-lg items-center justify-center gap-2 rounded-xl border-2 border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 py-3 text-sm font-medium text-violet-600 dark:text-violet-400 transition-colors hover:bg-violet-100 dark:hover:bg-violet-900/40"
+      >
+        📍 自訂地點
+      </Link>
+
       <div className="mt-3 grid w-full max-w-lg grid-cols-2 gap-3">
         {BROWSE_LINKS.map((link) => (
           <Link
