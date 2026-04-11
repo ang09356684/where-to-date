@@ -14,11 +14,11 @@ const TYPE_TABS = [
   { value: "theater", label: "戲劇" },
   { value: "movie", label: "電影" },
   { value: "attraction", label: "景點" },
-  { value: "food", label: "餐廳" },
+  { value: "food", label: "美食" },
 ];
 
 function isFood(type: string) {
-  return ["restaurant", "cafe", "bar"].includes(type);
+  return type === "food";
 }
 
 function shuffle<T>(arr: T[]): T[] {

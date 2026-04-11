@@ -9,6 +9,8 @@ const BROWSE_LINKS = [
   { href: "/music", label: "音樂會", icon: "🎼" },
   { href: "/theater", label: "戲劇", icon: "🎭" },
   { href: "/movies", label: "電影", icon: "🎬" },
+  { href: "/attractions", label: "景點", icon: "🏞️" },
+  { href: "/food", label: "美食", icon: "🍽️" },
 ];
 
 export default function Home() {

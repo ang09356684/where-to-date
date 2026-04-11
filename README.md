@@ -7,7 +7,8 @@
 ## 啟動
 
 ```bash
-cd D:\repo\date_plan
+cd where-to-date
+npm install   # 第一次使用需安裝依賴
 npm run dev
 ```
 
@@ -15,15 +16,7 @@ npm run dev
 
 ## 關閉
 
-**方法 1**：在執行 `npm run dev` 的終端按 `Ctrl + C`
-
-**方法 2**：如果終端關掉了或是背景執行，打開任意終端輸入：
-
-```bash
-taskkill /F /IM node.exe
-```
-
-這會關閉所有 Node.js process（包含 dev server）。
+在執行 `npm run dev` 的終端按 `Ctrl + C`。
 
 ## 確認是否在執行
 
@@ -48,16 +41,23 @@ taskkill /F /IM node.exe
 |------|------|
 | 幫我安排 | 依條件隨機產生 2 組行程，每組 3 個地點 |
 | 🎲 再給我一組 | 排除已顯示的地點，換一組新的 |
-| 瀏覽電影 | 查看所有上映中電影列表 |
 | 瀏覽展覽 | 查看所有展覽列表，可按來源篩選 |
-| 同步資料 | 從外部網站抓取最新展覽 / 電影 / 景點資料 |
+| 瀏覽演唱會 | 查看演唱會列表（拓元/年代/寬宏/KKTIX 等） |
+| 瀏覽音樂會 | 查看古典音樂、音樂會列表 |
+| 瀏覽戲劇 | 查看戲劇表演列表 |
+| 瀏覽電影 | 查看所有上映中電影列表 |
+| 瀏覽景點 | 查看台北 / 桃園景點列表 |
+| 瀏覽美食 | 查看精選餐廳、咖啡廳列表 |
+| 自訂地點 | 手動新增地點（名稱 + 地址），整合到行程產生 |
+| 我的最愛 | 收藏喜歡的地點，可從最愛直接安排行程 |
+| 同步資料 | 從外部網站抓取最新展覽 / 電影 / 演出 / 景點資料 |
 
 ## 篩選條件
 
 | 條件 | 選項 |
 |------|------|
-| 地點 | 不限 / 台北（可展開 12 區）/ 桃園（可展開 5 區）|
-| 類型 | 不限 / 展覽 / 電影 / 景點 / 餐廳咖啡 |
+| 地點 | 不限 / 台北（可展開 12 區）/ 桃園（可展開 6 區）|
+| 類型 | 不限 / 展覽 / 演唱會 / 音樂會 / 戲劇 / 電影 / 景點 / 美食 |
 | 場景 | 都可以 / 室內 / 室外 |
 
 ---
@@ -65,6 +65,7 @@ taskkill /F /IM node.exe
 ## 資料來源
 
 ### 展覽（自動同步）
+
 | 來源 | 網站 |
 |------|------|
 | 文化部 Open Data | cloud.culture.tw |
@@ -73,24 +74,47 @@ taskkill /F /IM node.exe
 | 台北世貿中心 | twtc.com.tw |
 | 國立科教館 | ntsec.gov.tw |
 
+### 演唱會 / 音樂會 / 戲劇（自動同步）
+
+| 來源 | 網站 |
+|------|------|
+| 文化部音樂類 | cloud.culture.tw |
+| 文化部戲劇類 | cloud.culture.tw |
+| 拓元售票 | tixcraft.com |
+| 年代售票 | ticket.com.tw |
+| 寬宏售票 | kham.com.tw |
+| 兩廳院 OPENTIX | opentix.life |
+| KKTIX | kktix.com |
+
 ### 電影（自動同步）
+
 | 來源 | 網站 |
 |------|------|
 | 開眼電影網 | atmovies.com.tw |
 
 ### 景點（自動同步 + 手動）
+
 | 來源 | 說明 |
 |------|------|
 | 台北景點 | 手動精選 25 個（步道、公園、博物館等）|
 | 桃園觀光 API | travel.tycg.gov.tw（自動同步）|
 
-### 餐廳 / 咖啡廳（手動精選）
+### 美食（手動精選）
+
 | 檔案 | 說明 |
 |------|------|
 | `data/raw/restaurants-curated.json` | 台北 50 筆 |
 | `data/raw/restaurants-taoyuan-curated.json` | 桃園 15 筆 |
 
-> 要新增餐廳？直接編輯上面兩個 JSON 檔案，格式參考既有資料。
+> 要新增美食？直接編輯上面兩個 JSON 檔案，或使用首頁「自訂地點」功能。
+
+### 自訂地點（手動新增）
+
+| 檔案 | 說明 |
+|------|------|
+| `data/raw/custom-places.json` | 使用者透過頁面新增的地點 |
+
+> 透過首頁「📍 自訂地點」→「新增地點」，選擇分類並輸入名稱與地址即可。
 
 ---
 
@@ -98,20 +122,29 @@ taskkill /F /IM node.exe
 
 ```
 data/
-├── raw/           ← 各來源原始資料（同步按鈕會更新這裡）
+├── raw/                                 ← 各來源原始資料（同步按鈕會更新這裡）
 │   ├── exhibitions-culture.json
 │   ├── exhibitions-huashan.json
 │   ├── exhibitions-songshan.json
 │   ├── exhibitions-twtc.json
 │   ├── exhibitions-ntsec.json
+│   ├── performances-tixcraft.json
+│   ├── performances-era-ticket.json
+│   ├── performances-kham.json
+│   ├── performances-opentix.json
+│   ├── performances-kktix.json
 │   ├── movies-atmovies.json
 │   ├── attractions-taipei.json
 │   ├── attractions-taoyuan.json
-│   ├── restaurants-curated.json        ← 手動編輯
-│   └── restaurants-taoyuan-curated.json ← 手動編輯
-└── combined/      ← 程式自動彙整（不需手動修改）
+│   ├── restaurants-curated.json         ← 手動編輯
+│   ├── restaurants-taoyuan-curated.json ← 手動編輯
+│   └── custom-places.json              ← 自訂地點（頁面新增）
+└── combined/                            ← 程式自動彙整（不需手動修改）
     ├── all-places.json
     ├── exhibitions.json
+    ├── concerts.json
+    ├── music.json
+    ├── theater.json
     ├── movies.json
     ├── restaurants.json
     └── attractions.json
@@ -121,6 +154,7 @@ data/
 
 ## 技術架構
 
-- **Framework**: Next.js 16 + TypeScript + Tailwind CSS
-- **Storage**: JSON 檔案（無資料庫）
-- **資料抓取**: 文化部 JSON API + HTML scraping（華山/松菸/世貿/科教館/開眼電影）+ 桃園觀光 XML API
+- **Framework**: Next.js 16 + TypeScript + Tailwind CSS v4
+- **Storage**: JSON 檔案（無資料庫），收藏功能使用 localStorage
+- **資料抓取**: 文化部 JSON API + HTML scraping（華山/松菸/世貿/科教館/開眼電影/售票網站）+ 桃園觀光 XML API
+- **同步進度**: Server-Sent Events (SSE) 即時串流進度

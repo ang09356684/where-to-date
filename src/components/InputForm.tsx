@@ -43,7 +43,7 @@ const TYPES = [
   { value: "theater", label: "戲劇" },
   { value: "movie", label: "電影" },
   { value: "attraction", label: "景點" },
-  { value: "food", label: "餐廳/咖啡" },
+  { value: "food", label: "美食" },
 ] as const;
 
 const SETTINGS = [

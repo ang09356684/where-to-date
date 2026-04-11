@@ -12,9 +12,7 @@ const TYPES: { value: PlaceType; label: string }[] = [
   { value: "theater", label: "戲劇" },
   { value: "movie", label: "電影" },
   { value: "attraction", label: "景點" },
-  { value: "restaurant", label: "餐廳" },
-  { value: "cafe", label: "咖啡廳" },
-  { value: "bar", label: "酒吧" },
+  { value: "food", label: "美食" },
 ];
 
 const CATEGORIES = [
@@ -32,7 +30,7 @@ function extractDistrict(address: string): string {
 
 export default function AddCustomPlacePage() {
   const router = useRouter();
-  const [type, setType] = useState<PlaceType>("restaurant");
+  const [type, setType] = useState<PlaceType>("food");
   const [category, setCategory] = useState<"indoor" | "outdoor" | "both">(
     "both"
   );

@@ -10,9 +10,7 @@ const TYPE_LABELS: Record<string, string> = {
   music: "音樂會",
   theater: "戲劇",
   movie: "電影",
-  restaurant: "餐廳",
-  cafe: "咖啡廳",
-  bar: "酒吧",
+  food: "美食",
   attraction: "景點",
 };
 
@@ -22,9 +20,7 @@ const TYPE_COLORS: Record<string, string> = {
   music: "bg-indigo-100 text-indigo-700",
   theater: "bg-fuchsia-100 text-fuchsia-700",
   movie: "bg-blue-100 text-blue-700",
-  restaurant: "bg-orange-100 text-orange-700",
-  cafe: "bg-amber-100 text-amber-700",
-  bar: "bg-pink-100 text-pink-700",
+  food: "bg-orange-100 text-orange-700",
   attraction: "bg-green-100 text-green-700",
 };
 
@@ -104,7 +100,7 @@ export default function CustomPlacesPage() {
             <p className="text-4xl mb-4">📍</p>
             <p className="text-lg">還沒有自訂地點</p>
             <p className="mt-2 text-sm">
-              新增你喜歡的餐廳、景點，讓行程更個人化
+              新增你喜歡的美食、景點，讓行程更個人化
             </p>
             <Link
               href="/custom-places/add"

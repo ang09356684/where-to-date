@@ -80,13 +80,6 @@ function parseXmlFood(xml: string): TaoyuanFoodRaw[] {
   return results;
 }
 
-function guessType(item: TaoyuanFoodRaw): "restaurant" | "cafe" | "bar" {
-  const all = `${item.name} ${item.categories.join(" ")} ${item.description}`;
-  if (all.match(/咖啡|cafe|茶|甜點|烘焙|冰/i)) return "cafe";
-  if (all.match(/酒|bar|pub|啤酒/i)) return "bar";
-  return "restaurant";
-}
-
 export async function syncTaoyuanFood(): Promise<SyncResult> {
   try {
     const res = await fetch(URL);
@@ -115,7 +108,7 @@ export function taoyuanFoodPlaces(): Place[] {
   return raw.map((item) => ({
     id: `ty-food-${item.id}`,
     name: item.name,
-    type: guessType(item),
+    type: "food" as const,
     source: "taoyuan-food",
     category: "indoor" as const,
     address: `桃園市${item.district}${item.address}`,

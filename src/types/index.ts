@@ -22,9 +22,7 @@ export type PlaceType =
   | "music"
   | "theater"
   | "movie"
-  | "restaurant"
-  | "cafe"
-  | "bar"
+  | "food"
   | "attraction";
 
 export interface Itinerary {

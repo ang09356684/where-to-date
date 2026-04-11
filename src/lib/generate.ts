@@ -16,7 +16,7 @@ function isActivity(p: Place): boolean {
 }
 
 function isFood(p: Place): boolean {
-  return ["restaurant", "cafe", "bar"].includes(p.type);
+  return p.type === "food";
 }
 
 function matchesType(place: Place, typeFilter: string): boolean {

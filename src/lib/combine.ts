@@ -99,7 +99,7 @@ export function combineAllPlaces(): Place[] {
     "restaurants.json",
     deduped.filter(
       (p) =>
-        p.type === "restaurant" || p.type === "cafe" || p.type === "bar"
+        p.type === "food"
     )
   );
   writeCombinedJson(
