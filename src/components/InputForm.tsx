@@ -88,11 +88,76 @@ function ChipGroup({ label, options, selected, onSelect }: ChipGroupProps) {
   );
 }
 
+interface MultiChipGroupProps {
+  label: string;
+  options: readonly { value: string; label: string }[];
+  selected: string[];
+  maxSelect: number;
+  allValue: string;
+  onSelect: (values: string[]) => void;
+}
+
+function MultiChipGroup({ label, options, selected, maxSelect, allValue, onSelect }: MultiChipGroupProps) {
+  const isFull = selected.length >= maxSelect && !selected.includes(allValue);
+
+  const handleClick = (value: string) => {
+    if (value === allValue) {
+      onSelect([allValue]);
+      return;
+    }
+
+    if (selected.includes(allValue)) {
+      onSelect([value]);
+      return;
+    }
+
+    if (selected.includes(value)) {
+      const next = selected.filter((v) => v !== value);
+      onSelect(next.length === 0 ? [allValue] : next);
+      return;
+    }
+
+    if (selected.length < maxSelect) {
+      onSelect([...selected, value]);
+    }
+  };
+
+  return (
+    <div className="mb-6">
+      <label className="mb-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+        {label}
+      </label>
+      <div className="flex flex-wrap gap-2">
+        {options.map((opt) => {
+          const isActive = selected.includes(opt.value);
+          const isDisabled = isFull && !isActive && opt.value !== allValue;
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => handleClick(opt.value)}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                  : isDisabled
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-40 dark:bg-gray-800 dark:text-gray-500"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function InputForm() {
   const router = useRouter();
   const [city, setCity] = useState("不限");
   const [subDistrict, setSubDistrict] = useState("");
-  const [type, setType] = useState("all");
+  const [types, setTypes] = useState<string[]>(["all"]);
   const [setting, setSetting] = useState("both");
 
   const handleCitySelect = (value: string) => {
@@ -112,7 +177,7 @@ export default function InputForm() {
       district = subDistrict;
     }
 
-    const params = new URLSearchParams({ district, type, setting });
+    const params = new URLSearchParams({ district, type: types.join(","), setting });
     router.push(`/result?${params.toString()}`);
   };
 
@@ -156,11 +221,13 @@ export default function InputForm() {
         </div>
       )}
 
-      <ChipGroup
-        label="類型"
+      <MultiChipGroup
+        label="類型（最多 3 個）"
         options={TYPES}
-        selected={type}
-        onSelect={setType}
+        selected={types}
+        maxSelect={3}
+        allValue="all"
+        onSelect={setTypes}
       />
       <ChipGroup
         label="場景"

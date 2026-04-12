@@ -15,7 +15,8 @@ function ResultContent() {
   const { isFavorite, toggle } = useFavorites();
 
   const district = searchParams.get("district") ?? "不限";
-  const type = searchParams.get("type") ?? "all";
+  const typeParam = searchParams.get("type") ?? "all";
+  const types = typeParam.split(",").filter(Boolean);
   const setting = searchParams.get("setting") ?? "both";
 
   const fetchItineraries = useCallback(
@@ -27,7 +28,7 @@ function ResultContent() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             district,
-            type,
+            type: types,
             setting,
             exclude: excludeIds,
           }),
@@ -40,7 +41,7 @@ function ResultContent() {
         setLoading(false);
       }
     },
-    [district, type, setting]
+    [district, typeParam, setting]
   );
 
   useEffect(() => {
@@ -76,9 +77,11 @@ function ResultContent() {
                   ? "桃園"
                   : district}
           </span>
-          <span className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">
-            {{ all: "不限", exhibition: "展覽", concert: "演唱會", music: "音樂會", theater: "戲劇", movie: "電影", attraction: "景點", food: "美食" }[type] ?? type}
-          </span>
+          {types.map((t) => (
+            <span key={t} className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">
+              {{ all: "不限", exhibition: "展覽", concert: "演唱會", music: "音樂會", theater: "戲劇", movie: "電影", attraction: "景點", food: "美食" }[t] ?? t}
+            </span>
+          ))}
           <span className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">
             {setting === "indoor"
               ? "室內"
