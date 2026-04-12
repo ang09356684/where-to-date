@@ -19,16 +19,9 @@ function isFood(p: Place): boolean {
   return p.type === "food";
 }
 
-function matchesType(place: Place, typeFilter: string): boolean {
-  if (typeFilter === "all") return true;
-  if (typeFilter === "exhibition") return place.type === "exhibition";
-  if (typeFilter === "movie") return place.type === "movie";
-  if (typeFilter === "attraction") return place.type === "attraction";
-  if (typeFilter === "concert") return place.type === "concert";
-  if (typeFilter === "music") return place.type === "music";
-  if (typeFilter === "theater") return place.type === "theater";
-  if (typeFilter === "food") return isFood(place);
-  return true;
+function matchesType(place: Place, typeFilters: string[]): boolean {
+  if (typeFilters.includes("all")) return true;
+  return typeFilters.includes(place.type);
 }
 
 function matchesBase(
@@ -61,39 +54,30 @@ function pickPlaces(
   activities: Place[],
   foods: Place[],
   usedIds: Set<string>,
-  typeFilter: string
+  typeFilters: string[]
 ): Place[] {
   const places: Place[] = [];
 
-  if (typeFilter === "food") {
-    // Only food requested: pick 3 food items
+  const hasFood = typeFilters.includes("food");
+  const hasActivity = typeFilters.some((t) =>
+    ["exhibition", "concert", "music", "theater", "movie", "attraction"].includes(t)
+  );
+  const isAll = typeFilters.includes("all");
+
+  if (hasFood && !hasActivity && !isAll) {
+    // Only food types selected: pick 3 food items
     for (let i = 0; i < 3; i++) {
       const f = pickFrom(foods, usedIds);
       if (f) places.push(f);
     }
-  } else if (["exhibition", "concert", "music", "theater", "movie", "attraction"].includes(typeFilter)) {
-    // Only activities requested: activity → activity → activity
-    // But mix in food if available for variety
-    const a1 = pickFrom(activities, usedIds);
-    if (a1) places.push(a1);
-    const f1 = pickFrom(foods, usedIds);
-    if (f1) places.push(f1);
-    const a2 = pickFrom(activities, usedIds);
-    if (a2) places.push(a2);
-    // Fill to 3
-    if (places.length < 3) {
-      const extra = pickFrom(activities, usedIds) ?? pickFrom(foods, usedIds);
-      if (extra) places.push(extra);
-    }
   } else {
-    // "all": activity → food → activity
+    // Activity types, mixed, or "all": activity → food → activity
     const a1 = pickFrom(activities, usedIds);
     if (a1) places.push(a1);
     const f1 = pickFrom(foods, usedIds);
     if (f1) places.push(f1);
     const a2 = pickFrom(activities, usedIds);
     if (a2) places.push(a2);
-    // Fill to 3
     if (places.length < 3) {
       const extra = pickFrom(activities, usedIds) ?? pickFrom(foods, usedIds);
       if (extra) places.push(extra);
