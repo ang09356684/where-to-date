@@ -75,7 +75,9 @@ function ResultContent() {
                 ? "台北"
                 : district === "桃園-all"
                   ? "桃園"
-                  : district}
+                  : district === "宜蘭-all"
+                    ? "宜蘭"
+                    : district}
           </span>
           {types.map((t) => (
             <span key={t} className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">

@@ -107,6 +107,7 @@ export function generateItineraries(
   const CITY_KEYWORDS: Record<string, string[]> = {
     台北: ["臺北", "台北"],
     桃園: ["桃園"],
+    宜蘭: ["宜蘭"],
   };
 
   function matchesCity(place: Place, city: string): boolean {

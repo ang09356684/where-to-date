@@ -7,6 +7,7 @@ const CITIES = [
   { value: "不限", label: "不限" },
   { value: "台北", label: "台北" },
   { value: "桃園", label: "桃園" },
+  { value: "宜蘭", label: "宜蘭" },
 ] as const;
 
 const SUB_DISTRICTS: Record<string, { value: string; label: string }[]> = {
@@ -29,9 +30,32 @@ const SUB_DISTRICTS: Record<string, { value: string; label: string }[]> = {
     { value: "桃園-不限", label: "不限" },
     { value: "桃園區", label: "桃園" },
     { value: "中壢區", label: "中壢" },
+    { value: "平鎮區", label: "平鎮" },
+    { value: "八德區", label: "八德" },
+    { value: "楊梅區", label: "楊梅" },
+    { value: "蘆竹區", label: "蘆竹" },
+    { value: "龜山區", label: "龜山" },
+    { value: "大園區", label: "大園" },
+    { value: "觀音區", label: "觀音" },
+    { value: "新屋區", label: "新屋" },
     { value: "大溪區", label: "大溪" },
-    { value: "復興區", label: "復興" },
     { value: "龍潭區", label: "龍潭" },
+    { value: "復興區", label: "復興" },
+  ],
+  宜蘭: [
+    { value: "宜蘭-不限", label: "不限" },
+    { value: "宜蘭市", label: "宜蘭" },
+    { value: "羅東鎮", label: "羅東" },
+    { value: "蘇澳鎮", label: "蘇澳" },
+    { value: "頭城鎮", label: "頭城" },
+    { value: "礁溪鄉", label: "礁溪" },
+    { value: "壯圍鄉", label: "壯圍" },
+    { value: "員山鄉", label: "員山" },
+    { value: "冬山鄉", label: "冬山" },
+    { value: "五結鄉", label: "五結" },
+    { value: "三星鄉", label: "三星" },
+    { value: "大同鄉", label: "大同" },
+    { value: "南澳鄉", label: "南澳" },
   ],
 };
 
