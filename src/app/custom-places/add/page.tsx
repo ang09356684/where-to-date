@@ -192,7 +192,11 @@ export default function AddCustomPlacePage() {
         <button
           onClick={handleSave}
           disabled={!canSave || saving}
-          className="w-full rounded-full bg-gray-900 py-3 text-lg font-semibold text-white transition-colors hover:bg-gray-700 disabled:opacity-40 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-300"
+          className="w-full rounded-full py-3 text-lg font-semibold transition-opacity hover:opacity-90 disabled:opacity-40"
+          style={{
+            backgroundColor: "var(--theme-accent)",
+            color: "var(--theme-on-accent)",
+          }}
         >
           {saving ? "儲存中..." : "儲存"}
         </button>

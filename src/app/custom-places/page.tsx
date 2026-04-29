@@ -80,7 +80,11 @@ export default function CustomPlacesPage() {
           </div>
           <Link
             href="/custom-places/add"
-            className="rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-300"
+            className="rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+            style={{
+              backgroundColor: "var(--theme-pin)",
+              color: "var(--theme-on-accent)",
+            }}
           >
             ＋ 新增地點
           </Link>
@@ -104,7 +108,11 @@ export default function CustomPlacesPage() {
             </p>
             <Link
               href="/custom-places/add"
-              className="mt-4 inline-block rounded-full bg-gray-900 dark:bg-gray-100 px-6 py-2 text-white dark:text-gray-900"
+              className="mt-4 inline-block rounded-full px-6 py-2"
+              style={{
+                backgroundColor: "var(--theme-pin)",
+                color: "var(--theme-on-accent)",
+              }}
             >
               新增第一個地點
             </Link>

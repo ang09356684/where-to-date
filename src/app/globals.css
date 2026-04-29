@@ -12,13 +12,23 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Theme palette defaults (overridden by PaletteSwitcher) */
+  --theme-accent: #111827;
+  --theme-on-accent: #ffffff;
+  --theme-heart: #ff2d55;
+  --theme-pin: #af52de;
+  --theme-surface: #ffffff;
 }
 
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --theme-surface: #0a0a0a;
 }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--theme-surface);
+  transition: background-color 0.3s ease;
 }

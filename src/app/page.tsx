@@ -21,14 +21,24 @@ export default function Home() {
 
       <Link
         href="/favorites"
-        className="mt-8 flex w-full max-w-lg items-center justify-center gap-2 rounded-xl border-2 border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30 py-3 text-sm font-medium text-rose-600 dark:text-rose-400 transition-colors hover:bg-rose-100 dark:hover:bg-rose-900/40"
+        className="mt-8 flex w-full max-w-lg items-center justify-center gap-2 rounded-xl border-2 py-3 text-sm font-medium transition-opacity hover:opacity-80"
+        style={{
+          borderColor: "var(--theme-heart)",
+          color: "var(--theme-heart)",
+          backgroundColor: "color-mix(in srgb, var(--theme-heart) 10%, transparent)",
+        }}
       >
         ❤️ 我的最愛
       </Link>
 
       <Link
         href="/custom-places"
-        className="mt-3 flex w-full max-w-lg items-center justify-center gap-2 rounded-xl border-2 border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 py-3 text-sm font-medium text-violet-600 dark:text-violet-400 transition-colors hover:bg-violet-100 dark:hover:bg-violet-900/40"
+        className="mt-3 flex w-full max-w-lg items-center justify-center gap-2 rounded-xl border-2 py-3 text-sm font-medium transition-opacity hover:opacity-80"
+        style={{
+          borderColor: "var(--theme-pin)",
+          color: "var(--theme-pin)",
+          backgroundColor: "color-mix(in srgb, var(--theme-pin) 10%, transparent)",
+        }}
       >
         📍 自訂地點
       </Link>
@@ -38,7 +48,7 @@ export default function Home() {
           <Link
             key={link.href}
             href={link.href}
-            className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur py-3 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:bg-white dark:hover:bg-gray-900"
           >
             {link.icon} {link.label}
           </Link>

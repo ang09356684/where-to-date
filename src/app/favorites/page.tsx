@@ -201,7 +201,11 @@ export default function FavoritesPage() {
         {favorites.length >= 2 && (
           <button
             onClick={generateFromFavorites}
-            className="mb-6 w-full rounded-full bg-gray-900 dark:bg-gray-100 py-3 text-base font-semibold text-white dark:text-gray-900 transition-colors hover:bg-gray-700 dark:hover:bg-gray-300"
+            className="mb-6 w-full rounded-full py-3 text-base font-semibold transition-opacity hover:opacity-90"
+            style={{
+              backgroundColor: "var(--theme-accent)",
+              color: "var(--theme-on-accent)",
+            }}
           >
             從最愛安排行程
           </button>
@@ -262,7 +266,11 @@ export default function FavoritesPage() {
             </p>
             <Link
               href="/"
-              className="mt-4 inline-block rounded-full bg-gray-900 dark:bg-gray-100 px-6 py-2 text-white dark:text-gray-900"
+              className="mt-4 inline-block rounded-full px-6 py-2"
+              style={{
+                backgroundColor: "var(--theme-accent)",
+                color: "var(--theme-on-accent)",
+              }}
             >
               去逛逛
             </Link>

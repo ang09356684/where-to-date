@@ -133,7 +133,11 @@ function ResultContent() {
       {!loading && itineraries.length > 0 && (
         <button
           onClick={handleShuffle}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-gray-900 dark:bg-gray-100 px-8 py-3 text-lg font-semibold text-white dark:text-gray-900 shadow-lg transition-colors hover:bg-gray-700 dark:hover:bg-gray-300"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-full px-8 py-3 text-lg font-semibold shadow-lg transition-opacity hover:opacity-90"
+          style={{
+            backgroundColor: "var(--theme-accent)",
+            color: "var(--theme-on-accent)",
+          }}
         >
           🎲 再給我一組
         </button>

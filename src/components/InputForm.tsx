@@ -97,6 +97,14 @@ function ChipGroup({ label, options, selected, onSelect }: ChipGroupProps) {
               key={opt.value}
               type="button"
               onClick={() => onSelect(opt.value)}
+              style={
+                isActive
+                  ? {
+                      background: "var(--theme-accent)",
+                      color: "var(--theme-on-accent)",
+                    }
+                  : undefined
+              }
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
@@ -160,6 +168,14 @@ function MultiChipGroup({ label, options, selected, maxSelect, allValue, onSelec
               key={opt.value}
               type="button"
               onClick={() => handleClick(opt.value)}
+              style={
+                isActive
+                  ? {
+                      background: "var(--theme-accent)",
+                      color: "var(--theme-on-accent)",
+                    }
+                  : undefined
+              }
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
@@ -231,6 +247,14 @@ export default function InputForm() {
                   key={opt.value}
                   type="button"
                   onClick={() => setSubDistrict(opt.value)}
+                  style={
+                    isActive
+                      ? {
+                          background: "var(--theme-heart)",
+                          color: "var(--theme-on-accent)",
+                        }
+                      : undefined
+                  }
                   className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                     isActive
                       ? "bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-900"
@@ -261,6 +285,10 @@ export default function InputForm() {
       />
       <button
         onClick={handleSubmit}
+        style={{
+          background: "var(--theme-accent)",
+          color: "var(--theme-on-accent)",
+        }}
         className="mt-4 w-full rounded-full bg-gray-900 py-3 text-lg font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-300"
       >
         幫我安排！
