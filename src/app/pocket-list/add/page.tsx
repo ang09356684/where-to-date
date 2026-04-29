@@ -166,7 +166,7 @@ export default function AddCustomPlacePage() {
         </Link>
 
         <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-50">
-          新增地點
+          新增項目
         </h1>
 
         {/* Type selector */}
@@ -258,7 +258,7 @@ export default function AddCustomPlacePage() {
         {/* Name input */}
         <div className="mb-6">
           <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-            地點名稱
+            名稱
           </label>
           <input
             type="text"

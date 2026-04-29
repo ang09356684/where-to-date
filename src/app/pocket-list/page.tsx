@@ -86,7 +86,7 @@ export default function CustomPlacesPage() {
               color: "var(--theme-on-accent)",
             }}
           >
-            ＋ 新增地點
+            ＋ 新增項目
           </Link>
         </div>
 
@@ -114,7 +114,7 @@ export default function CustomPlacesPage() {
                 color: "var(--theme-on-accent)",
               }}
             >
-              新增第一個地點
+              新增第一個項目
             </Link>
           </div>
         ) : (
