@@ -1,9 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { PlaceType } from "@/types";
+
+const GMAP_URL_RE =
+  /^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl|(?:www\.|maps\.)?google\.com\/maps)/i;
+
+const PARSE_ERROR_MESSAGES: Record<string, string> = {
+  "invalid-url": "請貼上 Google Maps 連結",
+  "not-google": "請貼上 Google Maps 連結",
+  "parse-failed": "無法解析此連結，請手動填寫",
+  "fetch-failed": "無法連線 Google Maps，請稍後再試",
+  timeout: "連線逾時，請手動填寫",
+};
 
 const TYPES: { value: PlaceType; label: string }[] = [
   { value: "exhibition", label: "展覽" },
@@ -38,8 +49,82 @@ export default function AddCustomPlacePage() {
   const [address, setAddress] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [gmapUrl, setGmapUrl] = useState("");
+  const [parsing, setParsing] = useState(false);
+  const [parseError, setParseError] = useState("");
+  const [parseNote, setParseNote] = useState("");
+  const lastParsedRef = useRef<string>("");
 
   const canSave = name.trim() && address.trim();
+  const canParse = GMAP_URL_RE.test(gmapUrl.trim());
+
+  const handleParseGmap = async (rawUrl?: string) => {
+    if (parsing) return;
+    const url = (rawUrl ?? gmapUrl).trim();
+    if (!GMAP_URL_RE.test(url)) {
+      setParseError(PARSE_ERROR_MESSAGES["not-google"]);
+      setParseNote("");
+      return;
+    }
+    if (url === lastParsedRef.current) return;
+
+    if (
+      (name.trim() || address.trim()) &&
+      !window.confirm("已有填入的內容，要從 Google Maps 覆寫嗎？")
+    ) {
+      return;
+    }
+
+    setParsing(true);
+    setParseError("");
+    setParseNote("");
+    lastParsedRef.current = url;
+
+    try {
+      const res = await fetch("/api/pocket-list/parse-gmap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const data = (await res.json()) as {
+        name?: string;
+        address?: string;
+        error?: string;
+      };
+
+      if (!res.ok || data.error) {
+        setParseError(
+          PARSE_ERROR_MESSAGES[data.error ?? ""] ??
+            "無法解析此連結，請手動填寫"
+        );
+        return;
+      }
+
+      if (data.name) setName(data.name);
+      if (data.address) setAddress(data.address);
+
+      if (data.name && data.address) {
+        setParseNote("已從 Google Maps 帶入，請確認後儲存");
+      } else if (data.name) {
+        setParseNote("已帶入名稱，地址請手動補上");
+      } else if (data.address) {
+        setParseNote("已帶入地址，名稱請手動補上");
+      } else {
+        setParseError("無法解析此連結，請手動填寫");
+      }
+    } catch {
+      setParseError("無法連線，請稍後再試");
+    } finally {
+      setParsing(false);
+    }
+  };
+
+  const handleGmapPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pasted = e.clipboardData.getData("text").trim();
+    if (!GMAP_URL_RE.test(pasted)) return;
+    setGmapUrl(pasted);
+    queueMicrotask(() => handleParseGmap(pasted));
+  };
 
   const handleSave = async () => {
     if (!canSave) return;
@@ -48,7 +133,7 @@ export default function AddCustomPlacePage() {
 
     try {
       const district = extractDistrict(address.trim());
-      const res = await fetch("/api/custom-places", {
+      const res = await fetch("/api/pocket-list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -62,7 +147,7 @@ export default function AddCustomPlacePage() {
       });
 
       if (!res.ok) throw new Error("儲存失敗");
-      router.push("/custom-places");
+      router.push("/pocket-list");
     } catch {
       setError("儲存失敗，請稍後再試");
     } finally {
@@ -74,10 +159,10 @@ export default function AddCustomPlacePage() {
     <main className="flex flex-1 flex-col items-center px-4 py-8">
       <div className="w-full max-w-lg">
         <Link
-          href="/custom-places"
+          href="/pocket-list"
           className="mb-4 inline-block text-sm text-gray-400 hover:text-gray-600"
         >
-          &larr; 返回自訂地點
+          &larr; 返回口袋名單
         </Link>
 
         <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-50">
@@ -130,6 +215,46 @@ export default function AddCustomPlacePage() {
           </div>
         </div>
 
+        {/* Google Maps link auto-fill */}
+        <div className="mb-6">
+          <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Google Maps 連結（選填）
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={gmapUrl}
+              onChange={(e) => setGmapUrl(e.target.value)}
+              onPaste={handleGmapPaste}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleParseGmap();
+                }
+              }}
+              disabled={parsing}
+              placeholder="貼上 maps.app.goo.gl/... 自動帶入"
+              className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-gray-400 dark:focus:border-gray-500 focus:outline-none disabled:opacity-60"
+            />
+            <button
+              type="button"
+              onClick={() => handleParseGmap()}
+              disabled={!canParse || parsing}
+              className="shrink-0 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40"
+            >
+              {parsing ? "解析中..." : "自動帶入"}
+            </button>
+          </div>
+          {parseError && (
+            <p className="mt-1.5 text-xs text-red-500">{parseError}</p>
+          )}
+          {!parseError && parseNote && (
+            <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+              {parseNote}
+            </p>
+          )}
+        </div>
+
         {/* Name input */}
         <div className="mb-6">
           <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -140,7 +265,8 @@ export default function AddCustomPlacePage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="例：鼎泰豐信義店"
-            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-gray-400 dark:focus:border-gray-500 focus:outline-none"
+            readOnly={parsing}
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-gray-400 dark:focus:border-gray-500 focus:outline-none read-only:opacity-60"
           />
         </div>
 
@@ -154,7 +280,8 @@ export default function AddCustomPlacePage() {
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="例：台北市信義區信義路二段194號"
-            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-gray-400 dark:focus:border-gray-500 focus:outline-none"
+            readOnly={parsing}
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-gray-400 dark:focus:border-gray-500 focus:outline-none read-only:opacity-60"
           />
           {address.trim() && (
             <p className="mt-1.5 text-xs text-gray-400">

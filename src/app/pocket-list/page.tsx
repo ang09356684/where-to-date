@@ -31,7 +31,7 @@ export default function CustomPlacesPage() {
 
   const fetchPlaces = useCallback(async () => {
     try {
-      const res = await fetch("/api/custom-places");
+      const res = await fetch("/api/pocket-list");
       const data = await res.json();
       setPlaces(data);
     } catch {
@@ -48,7 +48,7 @@ export default function CustomPlacesPage() {
   const handleDelete = async (id: string) => {
     setDeleting(id);
     try {
-      await fetch("/api/custom-places", {
+      await fetch("/api/pocket-list", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -74,12 +74,12 @@ export default function CustomPlacesPage() {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-              自訂地點
+              口袋名單
             </h1>
             <p className="text-sm text-gray-400">共 {places.length} 筆</p>
           </div>
           <Link
-            href="/custom-places/add"
+            href="/pocket-list/add"
             className="rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
             style={{
               backgroundColor: "var(--theme-pin)",
@@ -102,12 +102,12 @@ export default function CustomPlacesPage() {
         ) : places.length === 0 ? (
           <div className="py-16 text-center text-gray-400">
             <p className="text-4xl mb-4">📍</p>
-            <p className="text-lg">還沒有自訂地點</p>
+            <p className="text-lg">還沒有口袋名單</p>
             <p className="mt-2 text-sm">
               新增你喜歡的美食、景點，讓行程更個人化
             </p>
             <Link
-              href="/custom-places/add"
+              href="/pocket-list/add"
               className="mt-4 inline-block rounded-full px-6 py-2"
               style={{
                 backgroundColor: "var(--theme-pin)",

@@ -61,7 +61,7 @@ export function combineAllPlaces(): Place[] {
     ...taoyuanPlaces(),
   ];
 
-  const customPlaces = readRawJson<Place[]>("custom-places.json");
+  const customPlaces = readRawJson<Place[]>("pocket-list.json");
 
   const all = [...exhibitions, ...performances, ...movies, ...restaurants, ...attractions, ...customPlaces];
 

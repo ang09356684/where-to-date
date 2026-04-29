@@ -32,7 +32,7 @@ export default function Home() {
       </Link>
 
       <Link
-        href="/custom-places"
+        href="/pocket-list"
         className="mt-3 flex w-full max-w-lg items-center justify-center gap-2 rounded-xl border-2 py-3 text-sm font-medium transition-opacity hover:opacity-80"
         style={{
           borderColor: "var(--theme-pin)",
@@ -40,7 +40,7 @@ export default function Home() {
           backgroundColor: "color-mix(in srgb, var(--theme-pin) 10%, transparent)",
         }}
       >
-        📍 自訂地點
+        🔖 口袋名單
       </Link>
 
       <div className="mt-3 grid w-full max-w-lg grid-cols-2 gap-3">

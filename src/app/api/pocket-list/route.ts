@@ -3,7 +3,7 @@ import { readRawJson, writeRawJson } from "@/lib/data";
 import { combineAllPlaces } from "@/lib/combine";
 import type { Place } from "@/types";
 
-const FILENAME = "custom-places.json";
+const FILENAME = "pocket-list.json";
 
 export async function GET() {
   const places = readRawJson<Place[]>(FILENAME);
@@ -13,8 +13,8 @@ export async function GET() {
 export async function POST(request: Request) {
   const body: Omit<Place, "id" | "source"> = await request.json();
 
-  const id = `custom-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-  const place: Place = { ...body, id, source: "custom" };
+  const id = `pocket-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  const place: Place = { ...body, id, source: "pocket" };
 
   const existing = readRawJson<Place[]>(FILENAME);
   existing.push(place);

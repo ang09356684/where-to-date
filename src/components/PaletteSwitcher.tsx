@@ -9,7 +9,7 @@ export type Palette = {
   accent: string;     // 主要 CTA、選中 chip
   onAccent: string;   // accent 上的文字（通常是白）
   heart: string;      // 我的最愛
-  pin: string;        // 自訂地點
+  pin: string;        // 口袋名單
   surface: string;    // 頁面背景柔和色
   surfaceDark?: string; // dark mode 對應背景
 };
