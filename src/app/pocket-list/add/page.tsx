@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { PlaceType } from "@/types";
 
 const GMAP_URL_RE =
-  /^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl|(?:www\.|maps\.)?google\.com\/maps)/i;
+  /^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl|share\.google|(?:www\.|maps\.)?google\.com\/maps)/i;
 
 const PARSE_ERROR_MESSAGES: Record<string, string> = {
   "invalid-url": "請貼上 Google Maps 連結",
@@ -233,7 +233,7 @@ export default function AddCustomPlacePage() {
                 }
               }}
               disabled={parsing}
-              placeholder="貼上 maps.app.goo.gl/... 自動帶入"
+              placeholder="貼上 maps.app.goo.gl/... 或 share.google/... 自動帶入"
               className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-gray-400 dark:focus:border-gray-500 focus:outline-none disabled:opacity-60"
             />
             <button
