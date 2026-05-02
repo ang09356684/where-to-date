@@ -8,6 +8,21 @@ import type { PlaceType } from "@/types";
 const GMAP_URL_RE =
   /^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl|share\.google|(?:www\.|maps\.)?google\.com\/maps)/i;
 
+// 手機 Google Maps 的「分享」按鈕複製出來常是「店名\n\nhttps://share.google/xxx」整段，
+// 直接驗證會失敗，所以先從整串裡掃出第一個合法的 gmap URL。
+const URL_RE = /https?:\/\/[^\s<>"']+/gi;
+const TRAILING_PUNCT_RE = /[.,;)\]}'"]+$/;
+
+function extractGmapUrl(text: string): string | null {
+  const matches = text.match(URL_RE);
+  if (!matches) return null;
+  for (const raw of matches) {
+    const cleaned = raw.replace(TRAILING_PUNCT_RE, "");
+    if (GMAP_URL_RE.test(cleaned)) return cleaned;
+  }
+  return null;
+}
+
 const PARSE_ERROR_MESSAGES: Record<string, string> = {
   "invalid-url": "請貼上 Google Maps 連結",
   "not-google": "請貼上 Google Maps 連結",
@@ -56,16 +71,19 @@ export default function AddCustomPlacePage() {
   const lastParsedRef = useRef<string>("");
 
   const canSave = name.trim() && address.trim();
-  const canParse = GMAP_URL_RE.test(gmapUrl.trim());
+  const canParse = extractGmapUrl(gmapUrl.trim()) !== null;
 
   const handleParseGmap = async (rawUrl?: string) => {
     if (parsing) return;
-    const url = (rawUrl ?? gmapUrl).trim();
-    if (!GMAP_URL_RE.test(url)) {
+    const input = (rawUrl ?? gmapUrl).trim();
+    const url = extractGmapUrl(input);
+    if (!url) {
       setParseError(PARSE_ERROR_MESSAGES["not-google"]);
       setParseNote("");
       return;
     }
+    // 若使用者貼的字串夾雜店名等多餘文字，把欄位 normalize 成純 URL
+    if (url !== gmapUrl.trim()) setGmapUrl(url);
     if (url === lastParsedRef.current) return;
 
     if (
@@ -121,9 +139,10 @@ export default function AddCustomPlacePage() {
 
   const handleGmapPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pasted = e.clipboardData.getData("text").trim();
-    if (!GMAP_URL_RE.test(pasted)) return;
-    setGmapUrl(pasted);
-    queueMicrotask(() => handleParseGmap(pasted));
+    const extracted = extractGmapUrl(pasted);
+    if (!extracted) return;
+    setGmapUrl(extracted);
+    queueMicrotask(() => handleParseGmap(extracted));
   };
 
   const handleSave = async () => {

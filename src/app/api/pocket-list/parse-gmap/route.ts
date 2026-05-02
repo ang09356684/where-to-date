@@ -9,6 +9,17 @@ const ALLOWED_HOSTS = new Set([
   "google.com",
 ]);
 
+// 手機 gmaps 分享按鈕的 clipboard 是「店名\n\nhttps://share.google/xxx」這種混合字串，
+// 從整段裡掃出第一個合法的 URL 再交給後續流程。
+const URL_RE = /https?:\/\/[^\s<>"']+/gi;
+const TRAILING_PUNCT_RE = /[.,;)\]}'"]+$/;
+
+function extractFirstUrl(text: string): string | null {
+  const matches = text.match(URL_RE);
+  if (!matches) return null;
+  return matches[0].replace(TRAILING_PUNCT_RE, "");
+}
+
 export async function POST(request: Request) {
   let body: { url?: unknown };
   try {
@@ -20,9 +31,11 @@ export async function POST(request: Request) {
   const raw = typeof body.url === "string" ? body.url.trim() : "";
   if (!raw) return Response.json({ error: "invalid-url" }, { status: 400 });
 
+  const candidate = extractFirstUrl(raw) ?? raw;
+
   let parsed: URL;
   try {
-    parsed = new URL(raw);
+    parsed = new URL(candidate);
   } catch {
     return Response.json({ error: "invalid-url" }, { status: 400 });
   }
