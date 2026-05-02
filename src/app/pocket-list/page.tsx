@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import type { Place } from "@/types";
 
@@ -28,6 +28,8 @@ export default function CustomPlacesPage() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const fetchPlaces = useCallback(async () => {
     try {
@@ -44,6 +46,61 @@ export default function CustomPlacesPage() {
   useEffect(() => {
     fetchPlaces();
   }, [fetchPlaces]);
+
+  const handleExport = async () => {
+    const res = await fetch("/api/pocket-list");
+    const data = await res.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `noidea-pocket-list-${today}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setImporting(true);
+    try {
+      const text = await file.text();
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        alert("檔案不是合法的 JSON");
+        return;
+      }
+      if (!Array.isArray(parsed)) {
+        alert("檔案內容必須是陣列");
+        return;
+      }
+      const confirmed = window.confirm(
+        `將覆蓋現有 ${places.length} 筆口袋名單，確定匯入 ${parsed.length} 筆？`
+      );
+      if (!confirmed) return;
+
+      const res = await fetch("/api/pocket-list", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert(`匯入失敗：${err.error ?? res.statusText}`);
+        return;
+      }
+      await fetchPlaces();
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const handleDelete = async (id: string) => {
     setDeleting(id);
@@ -71,23 +128,56 @@ export default function CustomPlacesPage() {
           &larr; 返回首頁
         </Link>
 
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
               口袋名單
             </h1>
             <p className="text-sm text-gray-400">共 {places.length} 筆</p>
           </div>
-          <Link
-            href="/pocket-list/add"
-            className="rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
-            style={{
-              backgroundColor: "var(--theme-pin)",
-              color: "var(--theme-on-accent)",
-            }}
-          >
-            ＋ 新增項目
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleExport}
+              disabled={places.length === 0}
+              className="rounded-full border px-3 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+              style={{
+                borderColor: "var(--theme-pin)",
+                color: "var(--theme-pin)",
+              }}
+            >
+              匯出
+            </button>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={importing}
+              className="rounded-full border px-3 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+              style={{
+                borderColor: "var(--theme-pin)",
+                color: "var(--theme-pin)",
+              }}
+            >
+              {importing ? "匯入中..." : "匯入"}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json"
+              onChange={handleImportFile}
+              className="hidden"
+            />
+            <Link
+              href="/pocket-list/add"
+              className="rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+              style={{
+                backgroundColor: "var(--theme-pin)",
+                color: "var(--theme-on-accent)",
+              }}
+            >
+              ＋ 新增項目
+            </Link>
+          </div>
         </div>
 
         {loading ? (

@@ -24,6 +24,19 @@ export async function POST(request: Request) {
   return NextResponse.json(place, { status: 201 });
 }
 
+export async function PUT(request: Request) {
+  const body = await request.json();
+  if (!Array.isArray(body)) {
+    return NextResponse.json(
+      { error: "Payload must be an array of places" },
+      { status: 400 }
+    );
+  }
+  writeRawJson(FILENAME, body);
+  combineAllPlaces();
+  return NextResponse.json({ ok: true, count: body.length });
+}
+
 export async function DELETE(request: Request) {
   const { id } = await request.json();
   const existing = readRawJson<Place[]>(FILENAME);
