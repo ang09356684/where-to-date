@@ -3,6 +3,7 @@ import { fetchAndParseGmap, GmapFetchError } from "@/lib/gmap-parse";
 const ALLOWED_HOSTS = new Set([
   "maps.app.goo.gl",
   "goo.gl",
+  "share.google",
   "www.google.com",
   "maps.google.com",
   "google.com",
