@@ -202,10 +202,19 @@ function readInitialDark(): boolean {
 }
 
 export default function PaletteSwitcher() {
-  const [index, setIndex] = useState<number>(readInitialIndex);
-  const [dark, setDark] = useState<boolean>(readInitialDark);
+  const [index, setIndex] = useState<number>(0);
+  const [dark, setDark] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Hydration-safe init: SSR renders defaults, client adopts localStorage values after mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIndex(readInitialIndex());
+    setDark(readInitialDark());
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     applyPalette(PALETTES[index]);
@@ -249,6 +258,15 @@ export default function PaletteSwitcher() {
   };
 
   const current = PALETTES[index];
+
+  if (!mounted) {
+    return (
+      <div
+        aria-hidden
+        className="fixed right-4 top-4 z-50 h-10 w-10"
+      />
+    );
+  }
 
   return (
     <div ref={wrapRef} className="fixed right-4 top-4 z-50">
